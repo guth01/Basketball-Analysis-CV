@@ -22,15 +22,6 @@ class PlayerTracker:
         self.tracker = sv.ByteTrack()
 
     def detect_frames(self, frames):
-        """
-        Detect players in a sequence of frames using batch processing.
-
-        Args:
-            frames (list): List of video frames to process.
-
-        Returns:
-            list: YOLO detection results for each frame.
-        """
         batch_size=20 
         detections = [] 
         for i in range(0,len(frames),batch_size):
@@ -39,18 +30,6 @@ class PlayerTracker:
         return detections
 
     def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
-        """
-        Get player tracking results for a sequence of frames with optional caching.
-
-        Args:
-            frames (list): List of video frames to process.
-            read_from_stub (bool): Whether to attempt reading cached results.
-            stub_path (str): Path to the cache file.
-
-        Returns:
-            list: List of dictionaries containing player tracking information for each frame,
-                where each dictionary maps player IDs to their bounding box coordinates.
-        """
         tracks = read_stub(read_from_stub,stub_path)
         if tracks is not None:
             if len(tracks) == len(frames):
