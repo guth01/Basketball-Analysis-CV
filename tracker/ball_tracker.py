@@ -34,7 +34,7 @@ class BallTracker:
 
             detection_supervision = sv.Detections.from_ultralytics(detection)
             tracks.append({})
-            chosen__bbox = None
+            chosen_bbox = None
             max_confidence=0
 
             for frame_detection in detection_supervision:
