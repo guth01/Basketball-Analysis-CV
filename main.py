@@ -4,14 +4,18 @@ from drawers import(
     PlayerTrackDrawer,
     BallTracksDrawer,
     TeamBallControlDrawer,
-    PassInterceptionDrawer
+    PassInterceptionDrawer,
+    ShotEventDrawer,
 )
 from team_assigner import TeamAssigner
 from ball_aquisition import BallAquisitionDetector
 from pass_and_interception_detector import PassAndInterceptionDetector
+from shot_detector import ShotDetector
+from pathlib import Path
+
 def main():
     print("Welcome to the Basketball Project!")
-    video_frames = read_video("input_videos/video_3.mp4")
+    video_frames = read_video("input_videos/celetics_knicks.mp4")
     player_tracker = PlayerTracker("models/player.pt")
     ball_tracker = BallTracker("models/ball.pt")
     player_tracks = player_tracker.get_object_tracks(video_frames, read_from_stub=True, stub_path="stubs/player_tracks_stubs.pkl")
@@ -40,12 +44,20 @@ def main():
     passes = pass_and_interception_detector.detect_passes(ball_aquisition,player_assignment)
     interceptions=pass_and_interception_detector.detect_interceptions(ball_aquisition,player_assignment)
 
+    # ------------------------------------------------------------------ #
+    # Shot Detection (runs in parallel with the existing pipeline)        #
+    # ------------------------------------------------------------------ #
+    shot_detector = ShotDetector(fps=30)
+    shot_events_by_frame = shot_detector.process_video_frames(video_frames)
+    shot_detector.save_events(Path("output_videos/shot_events.json"))
+
     #Draw Output
     #Initialize Drawers
     player_tracks_drawer = PlayerTrackDrawer()
     ball_tracks_drawer = BallTracksDrawer()
     team_ball_control_drawer = TeamBallControlDrawer()
     pass_interception_drawer = PassInterceptionDrawer()
+    shot_event_drawer = ShotEventDrawer(fps=30)
 
     output_video_frames = player_tracks_drawer.draw(video_frames, player_tracks,player_assignment,ball_aquisition)
     output_video_frames = ball_tracks_drawer.draw(output_video_frames,ball_tracks)
@@ -55,6 +67,10 @@ def main():
 
     #Draw Passes and Interceptions
     output_video_frames = pass_interception_drawer.draw(output_video_frames,passes,interceptions)
+
+    # Draw Shot Events (MADE / MISSED banners)
+    output_video_frames = shot_event_drawer.draw(output_video_frames, shot_events_by_frame)
+
     save_video(output_video_frames, "output_videos/output_video.avi")
 
 
