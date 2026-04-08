@@ -13,7 +13,7 @@ class TeamAssigner:
     """
     def __init__(self,
                  team_1_class_name= "white shirt",
-                 team_2_class_name= "dark red shirt",
+                 team_2_class_name= "blue shirt",
                  ):
        
         self.team_colors = {}
@@ -36,7 +36,14 @@ class TeamAssigner:
         Returns:
             str: The classified jersey color/description.
         """
-        image = frame[int(bbox[1]):int(bbox[3]),int(bbox[0]):int(bbox[2])]
+        # Only crop top half of player (jersey area)
+        top = int(bbox[1])
+        bottom = int(bbox[1] + (bbox[3] - bbox[1]) * 0.5)  # halfway down
+        left = int(bbox[0])
+        right = int(bbox[2])
+        
+        image = frame[top:bottom, left:right]
+        # image = frame[int(bbox[1]):int(bbox[3]),int(bbox[0]):int(bbox[2])]
 
         # Convert to PIL Image
         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -94,7 +101,7 @@ class TeamAssigner:
         for frame_num, player_track in enumerate(player_tracks):        
             player_assignment.append({})
             
-            if frame_num %50 ==0:
+            if frame_num %200 ==0:
                 self.player_team_dict = {}
 
             for player_id, track in player_track.items():

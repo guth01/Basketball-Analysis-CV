@@ -1,7 +1,7 @@
 from .utils import draw_ellipse,draw_triangle
 
 class PlayerTrackDrawer:
-    def __init__(self,team_1_color=[255,245,238],team_2_color=[128,0,0]):
+    def __init__(self,team_1_color=[255,255,255],team_2_color=[255,0,0]):
         self.default_player_team_id=1
 
         self.team_1_color = team_1_color
