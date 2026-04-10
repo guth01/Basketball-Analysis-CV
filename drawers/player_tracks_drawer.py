@@ -7,7 +7,9 @@ class PlayerTrackDrawer:
         self.team_1_color = team_1_color
         self.team_2_color = team_2_color
 
-    def draw(self, video_frames,tracks,player_assignment,ball_aquisition):
+    def draw(self, video_frames,tracks,player_assignment,ball_aquisition, jersey_numbers=None):
+        if jersey_numbers is None:
+            jersey_numbers = {}
 
         output_video_frames = []
         for frame_num, frame in enumerate(video_frames):
@@ -27,7 +29,9 @@ class PlayerTrackDrawer:
                     color=self.team_2_color
                 if track_id == player_id_has_ball:
                     frame = draw_triangle(frame,player["bbox"],(0,0,255))
-                frame = draw_ellipse(frame, player['bbox'],color,track_id)
+                
+                player_jersey = jersey_numbers.get(track_id, None)
+                frame = draw_ellipse(frame, player['bbox'],color,track_id, jersey_number=player_jersey)
 
             output_video_frames.append(frame)
         return output_video_frames 

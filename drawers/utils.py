@@ -16,7 +16,7 @@ def draw_triangle(frame,bbox,color):
 
     return frame
 
-def draw_ellipse(frame, bbox,color,track_id=None):
+def draw_ellipse(frame, bbox,color,track_id=None, jersey_number=None):
     y2 = int(bbox[3])
     x_center,_= get_center_of_bbox(bbox)
     width = get_bbox_width(bbox)
@@ -33,13 +33,15 @@ def draw_ellipse(frame, bbox,color,track_id=None):
     ) 
 
     rectangle_width=40
+    if jersey_number:
+        rectangle_width=50
     rectangle_height=20
     x1_rect = x_center-rectangle_width//2
     x2_rect = x_center+rectangle_width//2
     y1_rect = (y2-rectangle_height//2)+15
     y2_rect = (y2+rectangle_height//2)+15
 
-    if track_id is not None:
+    if jersey_number is not None:
         cv2.rectangle(
             frame,
             (int(x1_rect), int(y1_rect)),
@@ -47,13 +49,15 @@ def draw_ellipse(frame, bbox,color,track_id=None):
             color,
             cv2.FILLED)
 
+        text_to_display = str(jersey_number)
+        
         x1_text = x1_rect + 12
-        if track_id>99:
-            x1_text -=10
+        if len(text_to_display) > 2:
+             x1_text -= 10
 
         cv2.putText(
             frame,
-            str(track_id),
+            text_to_display,
             (int(x1_text), int(y1_rect +15 )),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,

@@ -1,0 +1,11 @@
+opencv-python
+numpy
+pandas
+Pillow
+supervision
+ultralytics
+transformers
+python-dotenv
+inference
+sports
+easyocr
