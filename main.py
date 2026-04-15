@@ -31,7 +31,7 @@ def main():
     print(f"Welcome to the Basketball Project! Processing: {input_video_path}")
     video_frames = read_video(input_video_path)
     player_tracker = PlayerTracker("models/player.pt")
-    ball_tracker = BallTracker("models/ball.pt")
+    ball_tracker = BallTracker("models/ball_detector_model.pt")
     player_tracks = player_tracker.get_object_tracks(video_frames, read_from_stub=True, stub_path=f"stubs/player_tracks_stubs_{video_name}.pkl")
     ball_tracks = ball_tracker.get_object_tracks(video_frames,read_from_stub=True,stub_path = f"stubs/ball_track_stubs_{video_name}.pkl")
 
@@ -59,10 +59,39 @@ def main():
     interceptions=pass_and_interception_detector.detect_interceptions(ball_aquisition,player_assignment)
 
     # ------------------------------------------------------------------ #
-    # Shot Detection (runs in parallel with the existing pipeline)        #
+    # Shot Detection & Jersey OCR (unified loop)                         #
     # ------------------------------------------------------------------ #
     shot_detector = ShotDetector(fps=30)
-    shot_events_by_frame = shot_detector.process_video_frames(video_frames)
+    from ocr import JerseyNumberRecognizer
+    jersey_recognizer = JerseyNumberRecognizer()
+    
+    shot_events_by_frame = {}
+    total_frames = len(video_frames)
+    print(f"[Pipeline] Processing {total_frames} frames for Shot Detection and OCR...")
+
+    for frame_index, frame in enumerate(video_frames):
+        if frame_index % 100 == 0:
+            print(f"  [Pipeline] Frame {frame_index}/{total_frames}")
+
+        # One shared inference call
+        detections = shot_detector.run_inference(frame)
+
+        # 1. Feed Shot Tracker
+        events = shot_detector.update(frame_index, detections)
+        if events:
+            shot_events_by_frame[frame_index] = events
+
+        # 2. Feed Jersey OCR
+        player_tracks_for_frame = player_tracks[frame_index]
+        jersey_recognizer.update(frame, frame_index, player_tracks_for_frame, detections)
+
+    # Get final jersey labels
+    # We pass all known track IDs to get_labels
+    all_track_ids = set()
+    for frame_tracks in player_tracks:
+        all_track_ids.update(frame_tracks.keys())
+    jersey_labels = jersey_recognizer.get_labels(list(all_track_ids))
+
     shot_detector.save_events(Path(f"output_videos/{output_name}_shot_events.json"))
 
      # Speed and Distance Calculator
@@ -94,7 +123,7 @@ def main():
     shot_event_drawer = ShotEventDrawer(fps=30)
     speed_and_distance_drawer = SpeedAndDistanceDrawer()
 
-    output_video_frames = player_tracks_drawer.draw(video_frames, player_tracks,player_assignment,ball_aquisition)
+    output_video_frames = player_tracks_drawer.draw(video_frames, player_tracks,player_assignment,ball_aquisition, jersey_numbers=jersey_labels)
     output_video_frames = ball_tracks_drawer.draw(output_video_frames,ball_tracks)
 
     #Draw Team Ball Control

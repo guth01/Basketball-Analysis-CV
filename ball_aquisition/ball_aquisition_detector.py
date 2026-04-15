@@ -12,7 +12,7 @@ class BallAquisitionDetector:
         Initialize the BallAquisitionDetector with default thresholds.
         """
         self.possession_threshold = 50
-        self.min_frames = 13
+        self.min_frames = 11
         self.containment_threshold = 0.8
         
     def get_key_basketball_player_assignment_points(self, player_bbox,ball_center):
