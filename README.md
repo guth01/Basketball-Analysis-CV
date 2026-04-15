@@ -115,7 +115,7 @@ ROBOFLOW_API_KEY=your_roboflow_api_key_here
 
 All model weights, input videos, cached stubs, and sample output videos are available on Google Drive:
 
-> **📁 [Download from Google Drive](https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE)**
+> **📁 [Download from Google Drive](https://drive.google.com/drive/folders/1twaYMblu8oMnUmLMTplyIO6YZjJNkKzN?usp=sharing)**
 
 After downloading, place the files as follows:
 
