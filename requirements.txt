@@ -7,5 +7,6 @@ ultralytics
 transformers
 python-dotenv
 inference
-sports
+git+https://github.com/roboflow/sports.git@feat/basketball
 easyocr
+matplotlib
