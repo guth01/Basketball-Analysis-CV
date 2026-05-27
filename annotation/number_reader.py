@@ -130,7 +130,7 @@ class NumberAnnotator:
                 )
                 clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
                 gray = clahe.apply(gray)
-                gray = cv2.                     Blur(gray, (3, 3), 0)
+                gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
                 results = self.reader.readtext(
                     gray,

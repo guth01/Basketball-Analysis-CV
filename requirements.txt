@@ -10,3 +10,6 @@ inference
 git+https://github.com/roboflow/sports.git@feat/basketball
 easyocr
 matplotlib
+fastapi
+uvicorn
+python-multipart

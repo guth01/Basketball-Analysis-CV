@@ -138,6 +138,14 @@ python main.py "input_videos/boston-celtics-new-york-knicks-game-1-q1-07.41-07.3
 python main.py
 ```
 
+## Web Upload UI
+
+```bash
+uvicorn app:app --host 127.0.0.1 --port 8000
+```
+
+Open `http://127.0.0.1:8000`, upload a video, wait for the pipeline to finish, then use the download button to save the annotated `.avi` output.
+
 ### Output files generated in `output_videos/`:
 
 | File | Description |

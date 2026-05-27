@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Basketball Video Analytics</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel">
+        <div class="header">
+          <p class="eyebrow">Computer Vision Pipeline</p>
+          <h1>Basketball Video Analytics</h1>
+          <p class="subtitle">
+            Upload a game clip, run the annotation pipeline, and download the processed video.
+          </p>
+        </div>
+
+        <form id="uploadForm" class="upload-card">
+          <label id="dropZone" class="drop-zone" for="videoInput">
+            <input id="videoInput" type="file" accept="video/*" />
+            <span class="drop-icon" aria-hidden="true">+</span>
+            <span class="drop-title">Choose a video</span>
+            <span id="fileName" class="drop-copy">MP4, AVI, MOV, MKV, or WEBM</span>
+          </label>
+
+          <button id="processButton" type="submit" disabled>
+            Run Pipeline
+          </button>
+        </form>
+
+        <div id="statusCard" class="status-card hidden" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <div>
+            <h2 id="statusTitle">Processing video</h2>
+            <p id="statusText">This can take a while for longer clips. Keep this tab open.</p>
+          </div>
+        </div>
+
+        <div id="resultCard" class="result-card hidden">
+          <div>
+            <p class="eyebrow">Ready</p>
+            <h2>Your annotated video is complete</h2>
+            <p id="resultName"></p>
+          </div>
+          <a id="downloadLink" class="download-button" href="#" download>
+            Download Video
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
