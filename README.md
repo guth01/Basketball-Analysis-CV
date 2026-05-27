@@ -146,6 +146,10 @@ uvicorn app:app --host 127.0.0.1 --port 8000
 
 Open `http://127.0.0.1:8000`, upload a video, wait for the pipeline to finish, then use the download button to save the annotated `.avi` output.
 
+> [!WARNING]
+> **Cloud Deployment on Free Tiers**
+> This application is currently intended to be run locally. It has not been deployed to free cloud platforms (like Render, Railway, or Heroku) because their free tiers (typically ~512MB RAM and limited CPU without a GPU) lack the compute resources necessary to handle the heavy machine learning models (PyTorch, YOLOv8, Transformers) used in this computer vision pipeline. Running this pipeline on those platforms will result in Out-Of-Memory (OOM) crashes.
+
 ### Output files generated in `output_videos/`:
 
 | File | Description |
